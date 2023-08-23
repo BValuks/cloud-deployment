@@ -1,7 +1,7 @@
 
 import os
 import psycopg
-from flask import Flask, request, redirect, url_for, escape
+from flask import Flask, request, redirect, url_for, escape, render_template
 
 # We're going to write a function that constructs an URL for the database
 def get_database_url():
@@ -38,6 +38,7 @@ POSTGRES_URL = get_database_url()
 setup_database(POSTGRES_URL)
 
 app = Flask(__name__)
+app.jinja_env.autoescape = True
 
 # Below are two fairly ordinary Flask routes
 
@@ -58,22 +59,25 @@ def get_messages():
 
 # These two methods generate HTML lists and forms
 def format_messages(messages):
-    output = "<ul>"
-    for message in messages:
-        # We escape the message to avoid the user sending us HTML and tricking
-        # us into rendering it.
-        escaped_message = escape(message[0])
-        output += f"<li>{escaped_message}</li>"
-    output += "</ul>"
-    return output
+    # message_list = [message[0] for message in messages]
+    return render_template('formatted-messages.html', messages=messages)
+    # output = "<ul>"
+    # for message in messages:
+    #     # We escape the message to avoid the user sending us HTML and tricking
+    #     # us into rendering it.
+    #     escaped_message = escape(message[0])
+    #     output += f"<li>{escaped_message}</li>"
+    # output += "</ul>"
+    # return output
 
 def generate_form():
-    return """
-    <form action="/" method="POST">
-        <input type="text" name="message">
-        <input type="submit" value="Send">
-    </form>
-    """
+    return render_template('message-form.html')
+    # return """
+    # <form action="/" method="POST">
+    #     <input type="text" name="message">
+    #     <input type="submit" value="Send">
+    # </form>
+    # """
 
 # This method receives the POST request from the form above
 @app.route("/", methods=["POST"])

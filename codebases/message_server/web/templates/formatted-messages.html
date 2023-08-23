@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>Messages</head>
+    <body>
+        <ul>
+            {% for message in messages %}
+                <li>{{message[0]}}</li>
+            {% endfor %}
+        </ul>
+    </body>
+</html>
+
+
+<!-- output = "<ul>"
+    for message in messages:
+        # We escape the message to avoid the user sending us HTML and tricking
+        # us into rendering it.
+        escaped_message = escape(message[0])
+        output += f"<li>{escaped_message}</li>"
+    output += "</ul>"
+    return output -->
